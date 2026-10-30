@@ -209,6 +209,7 @@ export function getRoleConfig(role?: string | null): RoleConfig {
 
 export function canAccessPath(role: string | null | undefined, pathname: string): boolean {
   if (!role) return false;
+  if (pathname === '/dashboard/architecture' || pathname.startsWith('/dashboard/architecture/')) return true;
   if (role === 'SYSTEM_ADMIN') return true;
 
   const config = getRoleConfig(role);
