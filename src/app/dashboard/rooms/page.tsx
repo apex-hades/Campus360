@@ -141,10 +141,6 @@ export default function RoomsManagementPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-low">Facility Capacity Engine</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Conflict-Free Scheduling</span>
-          </div>
           <h1 className="page-title">Room & Timetable Management</h1>
           <p className="page-description">
             Monitor classroom capacities, validate timetable schedules, detect reservation conflicts, and search smart alternative venues.

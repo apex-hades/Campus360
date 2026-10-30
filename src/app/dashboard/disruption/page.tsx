@@ -533,6 +533,7 @@ export default function DisruptionScenarioPage() {
           </div>
         </div>
       </div>
-    </RoleGuard>
+    </div>
+  </RoleGuard>
   );
 }

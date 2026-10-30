@@ -114,10 +114,6 @@ export default function InventoryManagementPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-low">Supply Chain Management</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Negative Stock Protected</span>
-          </div>
           <h1 className="page-title">Inventory & Spare Parts Control</h1>
           <p className="page-description">
             Track components, prevent negative inventory, receive low-stock alerts, and route purchase requests to procurement.

@@ -16,7 +16,6 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Shield,
   Zap,
 } from 'lucide-react';
 import { useRole } from './RoleContext';
@@ -47,43 +46,51 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   return (
     <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+      {/* Brand Header */}
       <div className="sidebar-header">
         <Link href="/dashboard" className="brand">
           <div className="brand-icon">
-            <Zap size={18} strokeWidth={2.5} />
+            <Zap size={16} strokeWidth={2.5} />
           </div>
           {!collapsed && (
-            <div>
-              <div className="brand-name">Campus360</div>
-              <div style={{ fontSize: '0.675rem', color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.02em' }}>
-                Enterprise Operations
-              </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+              <span className="brand-name">Campus360</span>
+              <span style={{ fontSize: '0.625rem', color: 'var(--primary)', fontWeight: 600, letterSpacing: '0.04em' }}>
+                v1.0
+              </span>
             </div>
           )}
         </Link>
         <button
           onClick={onToggle}
           className="btn btn-secondary btn-sm"
-          style={{ padding: '4px', borderRadius: 'var(--radius-sm)', width: '26px', height: '26px' }}
+          style={{ padding: '3px', borderRadius: 'var(--radius-sm)', width: '24px', height: '24px', minWidth: '24px' }}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+          {collapsed ? <ChevronRight size={13} /> : <ChevronLeft size={13} />}
         </button>
       </div>
 
+      {/* Navigation List */}
       <nav className="sidebar-nav">
-        {/* Disruption Demo link: only visible to Administrators with scenario permissions */}
+        {/* Disruption Demo Workflow: Cleanly placed for authorized admins */}
         {roleConfig.capabilities.canRunDisruptionDemo && (
           <Link
             href="/dashboard/disruption"
-            className={`nav-link nav-link-special ${pathname === '/dashboard/disruption' ? 'active' : ''}`}
-            title="Classroom Disruption Scenario Demo (A-204)"
+            className={`nav-link ${pathname === '/dashboard/disruption' ? 'active' : ''}`}
+            title="Classroom Failover & Relocation Simulation"
+            style={{
+              color: pathname === '/dashboard/disruption' ? 'var(--primary)' : 'var(--critical)',
+              backgroundColor: pathname === '/dashboard/disruption' ? 'var(--primary-subtle)' : 'transparent',
+            }}
           >
-            <AlertTriangle size={16} strokeWidth={2.2} />
+            <AlertTriangle size={15} strokeWidth={2} />
             {!collapsed && (
-              <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <span style={{ fontWeight: 600, fontSize: '0.8125rem' }}>Disruption Demo</span>
-                <span style={{ fontSize: '0.6875rem', opacity: 0.85 }}>Classroom Failure Scenario</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                <span>Disruption Failover</span>
+                <span className="badge badge-critical" style={{ fontSize: '0.5625rem', padding: '1px 5px' }}>
+                  Demo
+                </span>
               </div>
             )}
           </Link>
@@ -100,30 +107,24 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
               className={`nav-link ${isActive ? 'active' : ''}`}
               title={item.name}
             >
-              <Icon size={16} strokeWidth={isActive ? 2.2 : 1.8} />
+              <Icon size={15} strokeWidth={isActive ? 2.2 : 1.7} />
               {!collapsed && <span>{item.name}</span>}
             </Link>
           );
         })}
       </nav>
 
-      {/* Role Indicator & System Status Pill at bottom */}
+      {/* Calm Status Pill at Bottom */}
       {!collapsed && (
-        <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Active Role
-            </span>
-            <span className={`badge ${roleConfig.badgeClass}`} style={{ fontSize: '0.6875rem', padding: '2px 8px' }}>
+        <div style={{ padding: '12px 14px', borderTop: '1px solid var(--border-subtle)', background: 'var(--bg-surface)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="status-dot status-dot-green" />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: 'var(--text-secondary)' }}>Systems Nominal</span>
+            </div>
+            <span className={`badge ${roleConfig.badgeClass}`} style={{ fontSize: '0.625rem', padding: '1px 6px' }}>
               {roleConfig.label}
             </span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span className="status-dot status-dot-green" />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-heading)' }}>PostgreSQL Engine</span>
-              <span style={{ fontSize: '0.675rem', color: 'var(--text-muted)' }}>AI & Telemetry Live</span>
-            </div>
           </div>
         </div>
       )}

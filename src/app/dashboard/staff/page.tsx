@@ -84,10 +84,6 @@ export default function StaffManagementPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-low">Workforce Dispatch Engine</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Skills & Workload Balancing</span>
-          </div>
           <h1 className="page-title">Staff & Workforce Management</h1>
           <p className="page-description">
             Monitor technician shifts, active work orders, skill matrices, and intelligent assignment recommendations.

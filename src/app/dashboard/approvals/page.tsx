@@ -85,10 +85,6 @@ export default function ApprovalsPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-low">Governance & Compliance</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Separation of Duties Enforced</span>
-          </div>
           <h1 className="page-title">Approval & Authorization Centre</h1>
           <p className="page-description">
             Review capital purchase orders, room relocations, and administrative overrides with role-based checks.

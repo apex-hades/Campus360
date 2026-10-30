@@ -44,10 +44,6 @@ export default function IncidentsOverviewPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-critical">Campus Operations Command</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Multi-ticket Incident Intelligence</span>
-          </div>
           <h1 className="page-title">Incident Intelligence Command</h1>
           <p className="page-description">
             Cluster and manage complex campus outages, aggregate correlated complaints, and coordinate technical response teams.

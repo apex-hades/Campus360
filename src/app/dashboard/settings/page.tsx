@@ -30,10 +30,6 @@ export default function SettingsPage() {
       <div>
         <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className="badge badge-low">System Configuration</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Security & Integrations</span>
-          </div>
           <h1 className="page-title">Campus360 System Settings</h1>
           <p className="page-description">
             Configure LLM inference providers, SLA response windows, database connection pools, and webhook dispatch gateways.

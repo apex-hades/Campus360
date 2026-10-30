@@ -63,10 +63,6 @@ function TicketsListContent() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span className={`badge ${roleConfig.badgeClass}`}>{roleConfig.label} View</span>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SLA Response Monitored</span>
-          </div>
           <h1 className="page-title">
             {role === 'STUDENT'
               ? 'My Campus Complaints & Reports'
