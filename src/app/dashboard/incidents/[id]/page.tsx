@@ -229,7 +229,7 @@ export default function IncidentDetailPage() {
                         {new Date(t.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-primary)' }}>{t.event}</div>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--text-primary)' }}>{typeof t.event === 'object' ? JSON.stringify(t.event) : String(t.event || '')}</div>
                   </div>
                 </div>
               ))}

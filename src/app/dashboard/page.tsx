@@ -41,6 +41,21 @@ import { useRole } from '@/components/RoleContext';
 
 const CATEGORY_COLORS = ['#2563EB', '#0284C7', '#16A36A', '#D97706', '#7C3AED', '#DC5252', '#64748B'];
 
+
+function formatLogDetails(details: any): string {
+  if (!details) return '';
+  if (typeof details === 'string') return details;
+  if (typeof details === 'object') {
+    if (details.event) return String(details.event);
+    if (details.message) return String(details.message);
+    if (details.reason) return String(details.reason);
+    if (details.summary) return String(details.summary);
+    if (details.description) return String(details.description);
+    return JSON.stringify(details);
+  }
+  return String(details);
+}
+
 export default function DashboardOverviewPage() {
   const { currentUser, role, roleConfig } = useRole();
   const [data, setData] = useState<any>(null);
@@ -824,7 +839,7 @@ export default function DashboardOverviewPage() {
                 />
                 <div style={{ flex: 1 }}>
                   <div style={{ color: 'var(--text-primary)', fontWeight: 500 }}>
-                    <span style={{ fontWeight: 600 }}>{log.user?.name || 'System Operator'}</span> {log.details}
+                    <span style={{ fontWeight: 600 }}>{log.user?.name || 'System Operator'}</span> {formatLogDetails(log.details)}
                   </div>
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.6875rem' }}>
                     {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {log.action}
