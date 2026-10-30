@@ -1,0 +1,38 @@
+{
+  "name": "campus360",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "db:start": "node scripts/db-server.js",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.4.2",
+    "@prisma/client": "^5.14.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "bcryptjs": "^2.4.3",
+    "framer-motion": "^11.2.10",
+    "groq-sdk": "^0.3.3",
+    "lucide-react": "^0.378.0",
+    "next": "^14.2.23",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.5",
+    "recharts": "^2.12.7",
+    "typescript": "^5.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "embedded-postgres": "^18.4.0-beta.17",
+    "prisma": "^5.14.0",
+    "tsx": "^4.11.0"
+  }
+}

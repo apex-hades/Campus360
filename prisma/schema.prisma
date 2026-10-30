@@ -1,0 +1,596 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  STUDENT
+  FACULTY
+  STUDENT_FACULTY
+  TECHNICIAN
+  DEPARTMENT_MANAGER
+  FACILITIES_ADMIN
+  PROCUREMENT_APPROVER
+  SYSTEM_ADMIN
+}
+
+enum TicketCategory {
+  ELECTRICAL
+  PLUMBING
+  NETWORK_WIFI
+  HVAC
+  CLASSROOM_EQUIPMENT
+  INFRASTRUCTURE
+  OTHER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum TicketStatus {
+  OPEN
+  TRIAGED
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  BLOCKED
+  REOPENED
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  INVESTIGATING
+  IDENTIFIED
+  MONITORING
+  RESOLVED
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+  UNAVAILABLE
+  UNDER_INSPECTION
+}
+
+enum RoomType {
+  CLASSROOM
+  LECTURE_HALL
+  LAB
+  AUDITORIUM
+  CONFERENCE
+}
+
+enum EquipmentStatus {
+  OPERATIONAL
+  NEEDS_REPAIR
+  OUT_OF_SERVICE
+  DECOMMISSIONED
+}
+
+enum Shift {
+  MORNING
+  EVENING
+  NIGHT
+}
+
+enum AssignmentStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  REASSIGNED
+}
+
+enum StockStatus {
+  IN_STOCK
+  LOW_STOCK
+  OUT_OF_STOCK
+}
+
+enum ReservationStatus {
+  RESERVED
+  CONSUMED
+  RELEASED
+}
+
+enum PurchaseRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ApprovalType {
+  PURCHASE_REQUEST
+  EXPENSIVE_REPAIR
+  ROOM_RELOCATION
+  ADMINISTRATIVE_OVERRIDE
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  INCIDENT_UPDATE
+  ASSIGNMENT
+  APPROVAL
+  SLA_ESCALATION
+  DISRUPTION_ALERT
+  SYSTEM
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERED
+  FAILED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  RELOCATED
+  CANCELLED
+}
+
+enum EventType {
+  EXAMINATION
+  CLASS
+  SEMINAR
+  MAINTENANCE
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  name             String
+  role             UserRole          @default(STUDENT_FACULTY)
+  department       String?
+  phone            String?
+  avatarUrl        String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  staffProfile     StaffProfile?
+  reportedTickets  Ticket[]          @relation("ReporterTickets")
+  assignedTickets  Ticket[]          @relation("AssignedTickets")
+  ticketComments   TicketComment[]
+  ticketHistories  TicketHistory[]
+  createdRequests  PurchaseRequest[] @relation("PurchaseRequester")
+  approvedRequests PurchaseRequest[] @relation("PurchaseApprover")
+  requestedApprovals Approval[]      @relation("ApprovalRequester")
+  decidedApprovals   Approval[]      @relation("ApprovalDecider")
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+  assignedAssignments Assignment[]   @relation("AssignedBy")
+  bookingsCreated  Booking[]         @relation("BookedBy")
+
+  @@index([role])
+  @@index([email])
+}
+
+model Building {
+  id          String     @id @default(uuid())
+  code        String     @unique // e.g. "BLOCK-A"
+  name        String     // e.g. "Science & Computing Complex (Block A)"
+  campusZone  String     // e.g. "North Campus"
+  totalFloors Int        @default(4)
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  rooms       Room[]
+  tickets     Ticket[]
+  incidents   Incident[]
+
+  @@index([code])
+}
+
+model Room {
+  id           String      @id @default(uuid())
+  buildingId   String
+  roomNumber   String      // e.g. "A-204"
+  code         String      @unique // e.g. "BLK-A-204"
+  floor        Int         @default(1)
+  capacity     Int
+  roomType     RoomType    @default(CLASSROOM)
+  facilities   String[]    // e.g. ["Projector", "Air Conditioning", "60 Computer Terminals", "Audio System", "Backup Power"]
+  status       RoomStatus  @default(AVAILABLE)
+  statusReason String?     // e.g. "Electrical failure under investigation"
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  building     Building    @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  equipment    Equipment[]
+  tickets      Ticket[]
+  incidents    Incident[]
+  bookings     Booking[]
+  examinations Examination[]
+  classes      ClassSchedule[]
+
+  @@index([buildingId])
+  @@index([roomNumber])
+  @@index([status])
+  @@index([capacity])
+}
+
+model Equipment {
+  id           String          @id @default(uuid())
+  name         String          // e.g. "Epson 4K Laser Projector"
+  assetTag     String          @unique // e.g. "AST-PRJ-204"
+  category     TicketCategory  @default(CLASSROOM_EQUIPMENT)
+  roomId       String?
+  serialNumber String?
+  status       EquipmentStatus @default(OPERATIONAL)
+  lastInspection DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  room         Room?           @relation(fields: [roomId], references: [id], onDelete: SetNull)
+  tickets      Ticket[]
+
+  @@index([assetTag])
+  @@index([roomId])
+  @@index([category])
+}
+
+model Ticket {
+  id              String         @id // e.g. "CMP-2026-0001"
+  title           String
+  description     String
+  category        TicketCategory @default(OTHER)
+  priority        Priority       @default(MEDIUM)
+  status          TicketStatus   @default(OPEN)
+  buildingId      String?
+  roomId          String?
+  equipmentId     String?
+  reporterId      String
+  assignedToId    String?
+  affectedEquipment String?
+  slaHours        Int            @default(24)
+  slaDeadline     DateTime
+  blockedReason   String?
+  resolvedAt      DateTime?
+  duplicateOfId   String?
+  attachments     String[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  building        Building?       @relation(fields: [buildingId], references: [id])
+  room            Room?           @relation(fields: [roomId], references: [id])
+  equipment       Equipment?      @relation(fields: [equipmentId], references: [id])
+  reporter        User            @relation("ReporterTickets", fields: [reporterId], references: [id])
+  assignedTo      User?           @relation("AssignedTickets", fields: [assignedToId], references: [id])
+  duplicateOf     Ticket?         @relation("TicketDuplicates", fields: [duplicateOfId], references: [id])
+  duplicates      Ticket[]        @relation("TicketDuplicates")
+  comments        TicketComment[]
+  history         TicketHistory[]
+  assignments     Assignment[]
+  incidentTickets IncidentTicket[]
+  reservations    StockReservation[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([reporterId])
+  @@index([assignedToId])
+  @@index([roomId])
+}
+
+model TicketComment {
+  id         String   @id @default(uuid())
+  ticketId   String
+  userId     String
+  message    String
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId])
+}
+
+model TicketHistory {
+  id        String        @id @default(uuid())
+  ticketId  String
+  userId    String?
+  oldStatus TicketStatus?
+  newStatus TicketStatus
+  note      String?
+  createdAt DateTime      @default(now())
+
+  ticket    Ticket        @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User?         @relation(fields: [userId], references: [id])
+
+  @@index([ticketId])
+}
+
+model Incident {
+  id                 String           @id // e.g. "INC-2026-0001"
+  title              String
+  description        String
+  severity           IncidentSeverity @default(MEDIUM)
+  status             IncidentStatus   @default(INVESTIGATING)
+  leadTechnicianId   String?
+  affectedBuildingId String?
+  affectedRoomId     String?
+  summary            String?
+  timeline           Json             @default("[]") // [{ time: ISO, event: string, author: string }]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  resolvedAt         DateTime?
+
+  affectedBuilding   Building?        @relation(fields: [affectedBuildingId], references: [id])
+  affectedRoom       Room?            @relation(fields: [affectedRoomId], references: [id])
+  tickets            IncidentTicket[]
+  assignments        Assignment[]
+
+  @@index([status])
+  @@index([severity])
+  @@index([affectedRoomId])
+}
+
+model IncidentTicket {
+  incidentId String
+  ticketId   String
+  createdAt  DateTime @default(now())
+
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  ticket     Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@id([incidentId, ticketId])
+}
+
+model ClassSchedule {
+  id             String   @id @default(uuid())
+  courseCode     String   // e.g. "CS301"
+  courseName     String   // e.g. "Distributed Operating Systems"
+  department     String   // e.g. "Computer Science & Engineering"
+  instructorName String
+  enrolledCount  Int
+  roomId         String
+  dayOfWeek      Int      // 1 (Mon) - 7 (Sun)
+  startTime      String   // "10:00"
+  endTime        String   // "12:00"
+  createdAt      DateTime @default(now())
+
+  room           Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId])
+  @@index([dayOfWeek])
+}
+
+model Examination {
+  id             String        @id @default(uuid())
+  examCode       String        @unique // e.g. "EXAM-2026-AI60"
+  courseTitle    String        // e.g. "B.Sc AI & Data Science - Core Systems Final"
+  department     String        // e.g. "Artificial Intelligence & Data Science"
+  studentCount   Int           // 60
+  roomId         String
+  originalRoomId String?
+  examDate       DateTime      // Scheduled date
+  startTime      String        // "10:00"
+  endTime        String        // "12:00"
+  status         BookingStatus @default(CONFIRMED)
+  notes          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  room           Room          @relation(fields: [roomId], references: [id])
+
+  @@index([roomId])
+  @@index([examDate])
+  @@index([status])
+}
+
+model Booking {
+  id          String        @id @default(uuid())
+  roomId      String
+  title       String
+  bookedById  String
+  eventType   EventType     @default(CLASS)
+  date        DateTime
+  startTime   String        // "10:00"
+  endTime     String        // "12:00"
+  status      BookingStatus @default(CONFIRMED)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  room        Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  bookedBy    User          @relation("BookedBy", fields: [bookedById], references: [id])
+
+  @@index([roomId])
+  @@index([date])
+  @@index([status])
+}
+
+model StaffProfile {
+  id                     String       @id @default(uuid())
+  userId                 String       @unique
+  employeeId             String       @unique // e.g. "EMP-TECH-104"
+  skills                 String[]     // e.g. ["Electrical", "HVAC", "Network Switching"]
+  department             String       // e.g. "Campus Electrical & Utilities"
+  shift                  Shift        @default(MORNING)
+  isAvailable            Boolean      @default(true)
+  activeAssignmentsCount Int          @default(0)
+  maxConcurrentTickets   Int          @default(4)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  user                   User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignments            Assignment[]
+
+  @@index([isAvailable])
+  @@index([department])
+}
+
+model Skill {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  category    TicketCategory
+  description String?
+}
+
+model Assignment {
+  id           String           @id @default(uuid())
+  ticketId     String?
+  incidentId   String?
+  staffId      String
+  assignedById String
+  status       AssignmentStatus @default(PENDING)
+  notes        String?
+  assignedAt   DateTime         @default(now())
+  completedAt  DateTime?
+
+  ticket       Ticket?          @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  incident     Incident?        @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+  staff        StaffProfile     @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  assignedBy   User             @relation("AssignedBy", fields: [assignedById], references: [id])
+
+  @@index([staffId])
+  @@index([ticketId])
+  @@index([incidentId])
+  @@index([status])
+}
+
+model InventoryItem {
+  id                 String             @id @default(uuid())
+  sku                String             @unique // e.g. "INV-CB-40A"
+  name               String             // e.g. "40A Industrial Circuit Breaker"
+  category           TicketCategory     @default(ELECTRICAL)
+  quantity           Int                @default(0)
+  minStockThreshold  Int                @default(5)
+  reservedQuantity   Int                @default(0)
+  unitCost           Float              @default(0.0)
+  locationBin        String             // e.g. "Whse-A-Bay3"
+  status             StockStatus        @default(IN_STOCK)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  reservations       StockReservation[]
+  purchaseRequests   PurchaseRequest[]
+
+  @@index([category])
+  @@index([status])
+}
+
+model StockReservation {
+  id          String            @id @default(uuid())
+  itemId      String
+  ticketId    String
+  quantity    Int
+  status      ReservationStatus @default(RESERVED)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  item        InventoryItem     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  ticket      Ticket            @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+  @@index([ticketId])
+}
+
+model PurchaseRequest {
+  id            String                @id // e.g. "PR-2026-0012"
+  itemId        String
+  quantity      Int
+  estimatedCost Float
+  reason        String
+  requesterId   String
+  approverId    String?
+  status        PurchaseRequestStatus @default(PENDING)
+  comments      String?
+  createdAt     DateTime              @default(now())
+  approvedAt    DateTime?
+
+  item          InventoryItem         @relation(fields: [itemId], references: [id])
+  requester     User                  @relation("PurchaseRequester", fields: [requesterId], references: [id])
+  approver      User?                 @relation("PurchaseApprover", fields: [approverId], references: [id])
+
+  @@index([status])
+  @@index([requesterId])
+}
+
+model Approval {
+  id               String         @id @default(uuid())
+  entityType       ApprovalType
+  entityId         String         // ticketId, purchaseRequestId, or examRelocationId
+  requesterId      String
+  approverId       String?
+  status           ApprovalStatus @default(PENDING)
+  reason           String
+  comments         String?
+  revalidationData Json?          // snapshot of conditions at approval time
+  createdAt        DateTime       @default(now())
+  decidedAt        DateTime?
+
+  requester        User           @relation("ApprovalRequester", fields: [requesterId], references: [id])
+  approver         User?          @relation("ApprovalDecider", fields: [approverId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([status])
+  @@index([requesterId])
+}
+
+model Notification {
+  id             String           @id @default(uuid())
+  userId         String
+  title          String
+  message        String
+  type           NotificationType @default(SYSTEM)
+  read           Boolean          @default(false)
+  deliveryStatus DeliveryStatus   @default(DELIVERED)
+  metadata       Json?            // { linkUrl: string, relatedId: string }
+  createdAt      DateTime         @default(now())
+
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String   // e.g. "RELOCATE_EXAMINATION", "STATUS_CHANGE", "APPROVE_PURCHASE"
+  entity    String   // e.g. "Examination", "Ticket", "Inventory"
+  entityId  String
+  userId    String?
+  ipAddress String?
+  details   Json
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SLA {
+  id              String         @id @default(uuid())
+  category        TicketCategory
+  priority        Priority
+  targetHours     Int
+  escalationEmail String?
+
+  @@unique([category, priority])
+}
+
