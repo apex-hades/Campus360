@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Campus360 Core Workflow & Logic Flowcharts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  body { background: #F8FAFC; color: #172B4D; padding: 36px 40px; width: 1920px; height: 1080px; display: flex; flex-direction: column; justify-content: space-between; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 20px; border-bottom: 2px solid #E2E8F0; }
+  .title-group h1 { font-size: 30px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 12px; }
+  .title-group p { font-size: 14px; color: #64748B; margin-top: 4px; }
+  .badge { background: #EFF6FF; color: #2563EB; font-weight: 600; font-size: 13px; padding: 6px 14px; border-radius: 9999px; border: 1px solid #BFDBFE; display: inline-flex; align-items: center; gap: 6px; }
+  .badge-purple { background: #FAF5FF; color: #7C3AED; border-color: #E9D5FF; }
+
+  .workflows-container { display: flex; flex-direction: column; gap: 20px; flex: 1; margin-top: 20px; margin-bottom: 20px; }
+  .workflow-card { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 18px 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+  .wf-title { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .wf-title h3 { font-size: 16px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 10px; }
+  .tag { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+  .tag-purple { background: #F3E8FF; color: #7C3AED; }
+  .tag-blue { background: #DBEAFE; color: #1D4ED8; }
+  .tag-orange { background: #FFEDD5; color: #C2410C; }
+
+  .flow-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; align-items: stretch; position: relative; }
+  .step-box { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+  .step-box.highlight { background: #EFF6FF; border-color: #BFDBFE; }
+  .step-box.alert { background: #FEF2F2; border-color: #FECACA; }
+  .step-box.success { background: #F0FDF4; border-color: #BBF7D0; }
+  .step-header { font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 4px; }
+  .step-title { font-size: 13px; font-weight: 700; color: #1E293B; margin-bottom: 6px; }
+  .step-desc { font-size: 11px; color: #64748B; line-height: 1.5; }
+  .step-arrow { position: absolute; right: -12px; top: 50%; transform: translateY(-50%); z-index: 10; width: 22px; height: 22px; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #475569; }
+
+  .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px solid #E2E8F0; font-size: 12px; color: #64748B; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="title-group">
+      <h1>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Campus360 — Core Operational Flowcharts & Logic State Machines
+      </h1>
+      <p>Interactive End-to-End Execution Flows: AI Natural Language Triage, Autonomous Disruption Solver, and Governance Approvals</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <span class="badge">Deduplication & Auto-Dispatch</span>
+      <span class="badge badge-purple">Constraint-Based Room Relocation</span>
+    </div>
+  </div>
+
+  <div class="workflows-container">
+    <!-- WORKFLOW 1 -->
+    <div class="workflow-card">
+      <div class="wf-title">
+        <h3>
+          <span class="tag tag-purple">Workflow 1</span>
+          AI-Powered Natural Language Incident Triage & Auto-Dispatch Pipeline
+        </h3>
+        <span style="font-size:12px; color:#64748B;">Sub-200ms Ingestion • Groq LLaMA 3.3 70B • Heuristic Fallback • SLA Enforcement</span>
+      </div>
+      <div class="flow-row">
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Phase 1: Ingestion</div>
+          <div class="step-title">Unstructured Complaint</div>
+          <div class="step-desc">Student / Faculty types: <em>"Projector in Block A Room 204 has black screen. We have final exams starting tomorrow morning."</em></div>
+        </div>
+        <div class="step-box highlight">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Phase 2: LLM Inference</div>
+          <div class="step-title">Groq LLaMA 3.3 / Fail-Safe</div>
+          <div class="step-desc">Calls Groq API (<200ms). If offline or network blocks, local regex/keyword heuristic rules execute with zero interruption.</div>
+        </div>
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Phase 3: Zod Parsing</div>
+          <div class="step-title">Structured Entity Extraction</div>
+          <div class="step-desc">
+            • Category: <strong>CLASSROOM_EQUIPMENT</strong><br>
+            • Location: <strong>BLK-A-204</strong><br>
+            • Urgency: <strong>CRITICAL (Exam Context)</strong>
+          </div>
+        </div>
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Phase 4: Deduplication</div>
+          <div class="step-title">Duplicate Incident Check</div>
+          <div class="step-desc">Calculates semantic & room distance against active tickets. If matching, links as duplicateOfId; otherwise issues new CMP-2026-XXXX.</div>
+        </div>
+        <div class="step-box success">
+          <div class="step-header">Phase 5: Auto-Dispatch</div>
+          <div class="step-title">Skill & Shift Pairing</div>
+          <div class="step-desc">Matches available technician with AV/Electrical skills on morning shift. Sets 2-Hour SLA deadline; pushes instant mobile alert.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKFLOW 2 -->
+    <div class="workflow-card">
+      <div class="wf-title">
+        <h3>
+          <span class="tag tag-blue">Workflow 2</span>
+          Autonomous Classroom Disruption & Exam Relocation Engine
+        </h3>
+        <span style="font-size:12px; color:#64748B;">Constraint Satisfaction Solver • Multi-Table ACID Transaction • Push Broadcast</span>
+      </div>
+      <div class="flow-row">
+        <div class="step-box alert">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Stage 1: Failure Event</div>
+          <div class="step-title">Room A-204 Fails</div>
+          <div class="step-desc">AC compressor & main projector breakdown. Room status flipped to <strong>MAINTENANCE</strong>. 60-student exam starts in 45 minutes.</div>
+        </div>
+        <div class="step-box highlight">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Stage 2: Clash Detection</div>
+          <div class="step-title">Schedule Conflict Alert</div>
+          <div class="step-desc">System detects high-stakes <code>Examination</code> record for B.Sc AI & Data Science scheduled in affected room.</div>
+        </div>
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Stage 3: Constraint Solver</div>
+          <div class="step-title">Alternative Room Search</div>
+          <div class="step-desc">
+            Queries PostgreSQL database for:<br>
+            1. Capacity ≥ 60 seats<br>
+            2. Status = AVAILABLE<br>
+            3. Has Projector & AC<br>
+            ➔ Discovers <strong>Block B Room 101</strong>
+          </div>
+        </div>
+        <div class="step-box success">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Stage 4: Atomic Execution</div>
+          <div class="step-title">ACID prisma.$transaction</div>
+          <div class="step-desc">Atomically updates exam.roomId to B-101, marks B-101 OCCUPIED, A-204 MAINTENANCE, and writes immutable AuditLog entry.</div>
+        </div>
+        <div class="step-box">
+          <div class="step-header">Stage 5: Student Alert</div>
+          <div class="step-title">Multicast Notification</div>
+          <div class="step-desc">Dispatches real-time SMS, dashboard alerts, and guidance banner to Prof. Vikram, invigilators, and all 60 students.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKFLOW 3 -->
+    <div class="workflow-card">
+      <div class="wf-title">
+        <h3>
+          <span class="tag tag-orange">Workflow 3</span>
+          Procurement & Separation-of-Duties (SoD) Governance
+        </h3>
+        <span style="font-size:12px; color:#64748B;">Threshold Financial Gate • Anti-Self Approval Enforced • Warehouse Inventory Lock</span>
+      </div>
+      <div class="flow-row">
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Step 1: Shortage</div>
+          <div class="step-title">Stock Drop Trigger</div>
+          <div class="step-desc">Industrial Circuit Breakers fall below threshold (3 remaining &lt; 5 minStock). Technician flags during repair.</div>
+        </div>
+        <div class="step-box">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Step 2: Request</div>
+          <div class="step-title">Purchase Order PR-0012</div>
+          <div class="step-desc">Technician initiates purchase request for 10 units ($340.00). Automatically exceeds $100 auto-approval threshold.</div>
+        </div>
+        <div class="step-box alert">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Step 3: SoD Security</div>
+          <div class="step-title">Anti-Self Approval Guard</div>
+          <div class="step-desc">System enforces <code>requesterId !== approverId</code>. Requester cannot approve their own purchase (HTTP 403 blocked).</div>
+        </div>
+        <div class="step-box success">
+          <div class="step-arrow">➔</div>
+          <div class="step-header">Step 4: Approval</div>
+          <div class="step-title">Procurement Signoff</div>
+          <div class="step-desc">Procurement Approver (Priya Sharma) validates supplier pricing, clicks Approve, and locks purchase order.</div>
+        </div>
+        <div class="step-box">
+          <div class="step-header">Step 5: Warehouse</div>
+          <div class="step-title">Stock Reservation</div>
+          <div class="step-desc">Prisma transaction increments inventory status, updates bin Whse-A-Bay3, and appends to immutable security audit ledger.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div><strong>Design Principle:</strong> Deterministic failure handling, automated human-in-the-loop escalation, and auditability at every step.</div>
+    <div>● All state transitions verified via PostgreSQL ACID transactions</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Campus360 System Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  body { background: #F8FAFC; color: #172B4D; padding: 40px; width: 1920px; height: 1080px; display: flex; flex-direction: column; justify-content: space-between; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 2px solid #E2E8F0; }
+  .title-group h1 { font-size: 32px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 12px; }
+  .title-group p { font-size: 15px; color: #64748B; margin-top: 6px; }
+  .badge { background: #EFF6FF; color: #2563EB; font-weight: 600; font-size: 13px; padding: 6px 14px; border-radius: 9999px; border: 1px solid #BFDBFE; display: inline-flex; align-items: center; gap: 6px; }
+  .badge-purple { background: #FAF5FF; color: #7C3AED; border-color: #E9D5FF; }
+  .badge-green { background: #F0FDF4; color: #16A36A; border-color: #BBF7D0; }
+  
+  .grid-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; flex: 1; margin-top: 24px; margin-bottom: 24px; }
+  .tier-col { background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+  .tier-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #F1F5F9; }
+  .tier-num { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+  .t1 { background: #EFF6FF; color: #2563EB; }
+  .t2 { background: #F0FDF4; color: #16A36A; }
+  .t3 { background: #FAF5FF; color: #7C3AED; }
+  .t4 { background: #FFF7ED; color: #EA580C; }
+  .tier-title h3 { font-size: 16px; font-weight: 700; color: #0F172A; }
+  .tier-title span { font-size: 12px; color: #64748B; font-weight: 500; }
+  
+  .card-item { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+  .card-item:last-child { margin-bottom: 0; }
+  .card-title { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+  .card-desc { font-size: 12px; color: #64748B; line-height: 1.5; }
+  .pill { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: #E2E8F0; color: #475569; }
+  .pill-blue { background: #DBEAFE; color: #1E40AF; }
+  .pill-green { background: #DCFCE7; color: #166534; }
+  .pill-purple { background: #F3E8FF; color: #6B21A8; }
+  .pill-orange { background: #FFEDD5; color: #9A3412; }
+
+  .footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #E2E8F0; font-size: 13px; color: #64748B; }
+  .footer-tags { display: flex; gap: 12px; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="title-group">
+      <h1>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Campus360 — System Architecture Blueprint
+      </h1>
+      <p>AI-Powered Campus Operations & Intelligence Platform • 4-Tier High-Integrity Architecture</p>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <span class="badge">Next.js 14 App Router</span>
+      <span class="badge badge-purple">Groq LLaMA 3.3 70B</span>
+      <span class="badge badge-green">PostgreSQL 16 + Prisma</span>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <!-- TIER 1 -->
+    <div class="tier-col">
+      <div class="tier-header">
+        <div class="tier-num t1">01</div>
+        <div class="tier-title">
+          <h3>Tier 1: Presentation Layer</h3>
+          <span>Client & UI Components</span>
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Student / Faculty View</span>
+          <span class="pill pill-blue">Consumer UI</span>
+        </div>
+        <div class="card-desc">Conversational natural language issue intake with 4-step live milestone tracker (Reported → Assigned → In-Progress → Resolved).</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Unified Operations Dashboard</span>
+          <span class="pill pill-blue">Ops Command</span>
+        </div>
+        <div class="card-desc">Hero KPI cards (Incidents, Resolution Rate %, Field Workforce, Classroom Utilization) + Recharts dynamic telemetry feeds.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Technician Field View</span>
+          <span class="pill pill-blue">Field Ops</span>
+        </div>
+        <div class="card-desc">Dispatched work orders, priority SLA countdown timers, spare part requests, and direct resolution logging.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Design System Tokens</span>
+          <span class="pill">Vanilla CSS</span>
+        </div>
+        <div class="card-desc">Zero Tailwind. Strict CSS custom properties (#F7F9FC canvas, #FFFFFF card, #2563EB accent), Framer Motion transitions, Lucide React icons.</div>
+      </div>
+    </div>
+
+    <!-- TIER 2 -->
+    <div class="tier-col">
+      <div class="tier-header">
+        <div class="tier-num t2">02</div>
+        <div class="tier-title">
+          <h3>Tier 2: Business Core</h3>
+          <span>API & Governance Gateway</span>
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Next.js Route Handlers</span>
+          <span class="pill pill-green">Typed REST</span>
+        </div>
+        <div class="card-desc">Server-executed endpoint handlers managing tickets, rooms, staff allocations, inventory movements, and real-time alerts.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>7-Persona Server RBAC</span>
+          <span class="pill pill-green">Security</span>
+        </div>
+        <div class="card-desc">Strict server-side role validation in permissions.ts guarding Student, Faculty, Technician, Manager, Facilities, Procurement & Admin access.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Separation of Duties (SoD)</span>
+          <span class="pill pill-green">Compliance</span>
+        </div>
+        <div class="card-desc">Enforces anti-self-approval rules (requesterId !== approverId). Auto-escalates purchase requests exceeding $100 financial thresholds.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Immutable Audit Ledger</span>
+          <span class="pill">AuditLog</span>
+        </div>
+        <div class="card-desc">Append-only audit trail logging user identity, IP address, exact action, and deep JSON state snapshots on every state mutation.</div>
+      </div>
+    </div>
+
+    <!-- TIER 3 -->
+    <div class="tier-col">
+      <div class="tier-header">
+        <div class="tier-num t3">03</div>
+        <div class="tier-title">
+          <h3>Tier 3: AI & Operations</h3>
+          <span>NLP & Automated Logic</span>
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Groq LLaMA 3.3 70B Engine</span>
+          <span class="pill pill-purple">&lt; 200ms Latency</span>
+        </div>
+        <div class="card-desc">Deep incident intelligence extracting Category, Priority, Location (Block/Room), Equipment, and Urgency from unstructured text.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Offline Heuristic Fallback</span>
+          <span class="pill pill-purple">Zero Downtime</span>
+        </div>
+        <div class="card-desc">Deterministic regex & keyword parsing rules that take over instantly if external API calls or network connectivity fail.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Smart Deduplication</span>
+          <span class="pill pill-purple">Deduplication</span>
+        </div>
+        <div class="card-desc">Spatial & semantic string distance algorithms grouping duplicate reports into single parent investigations (CMP-2026-XXXX).</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Classroom Relocation Solver</span>
+          <span class="pill">Autonomous</span>
+        </div>
+        <div class="card-desc">Multi-criteria constraint solver re-routing disrupted examinations and lectures to unoccupied rooms matching capacity and AV gear.</div>
+      </div>
+    </div>
+
+    <!-- TIER 4 -->
+    <div class="tier-col">
+      <div class="tier-header">
+        <div class="tier-num t4">04</div>
+        <div class="tier-title">
+          <h3>Tier 4: Relational Persistence</h3>
+          <span>PostgreSQL & Prisma Engine</span>
+        </div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>PostgreSQL 16 Daemon</span>
+          <span class="pill pill-orange">Port 5433</span>
+        </div>
+        <div class="card-desc">Persistent ACID relational database engine hosting production campus operational tables with zero mock data.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Prisma ORM Client</span>
+          <span class="pill pill-orange">Type-Safe</span>
+        </div>
+        <div class="card-desc">Auto-generated TypeScript query client with schema-driven relations, cascading deletes, index tuning, and pooled connections.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>ACID Transactions</span>
+          <span class="pill pill-orange">Consistency</span>
+        </div>
+        <div class="card-desc">prisma.$transaction guarantees multi-table integrity across room status updates, exam re-routing, and inventory reservations.</div>
+      </div>
+      <div class="card-item">
+        <div class="card-title">
+          <span>Prisma Studio Web GUI</span>
+          <span class="pill">Port 5555</span>
+        </div>
+        <div class="card-desc">Visual real-time relational table browser allowing live inspection of records, foreign keys, and audit entries.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div><strong>Engineering Standard:</strong> Modular Monolith with decoupled server actions, verified TypeScript compilation, and zero hardcoded metrics.</div>
+    <div class="footer-tags">
+      <span>● System Status: Online</span>
+      <span>● PostgreSQL: Healthy</span>
+      <span>● Prisma Studio: Live on Port 5555</span>
+    </div>
+  </div>
+</body>
+</html>

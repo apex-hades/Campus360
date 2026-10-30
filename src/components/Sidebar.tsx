@@ -14,7 +14,6 @@ import {
   Bell,
   BarChart3,
   Settings,
-  Layers,
   ChevronLeft,
   ChevronRight,
   Zap,
@@ -37,7 +36,6 @@ export const navigationItems = [
   { name: 'Notifications', href: '/dashboard/notifications', icon: Bell },
   { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
-  { name: 'Architecture & Specs', href: '/dashboard/architecture', icon: Layers },
 ];
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
